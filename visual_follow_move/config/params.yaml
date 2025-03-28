@@ -1,0 +1,25 @@
+visual_follow_move:
+
+  #topics
+  pointCloudTopic: "/velodyne_points"               # Point cloud data
+  imageTopic: "/zed_node/left/image_rect_color"                         # image data
+  detectBoxTopic_: "/vision_detector/box_result"
+
+  # Extrinsics (lidar -> camera)
+  extrinsicTrans: [0.0, 0.0, 0.135]
+  extrinsicRPY: [-1.54075, 0.0, -1.54075]
+
+  #intransic of camera
+  #realsense
+  # intransicCamera: [910.493,   0.0,    643.488,
+  #                   0.0    ,  910.334, 346.260,
+  #                   0.0    ,  0.0,     1.0]
+
+  #normal camera
+  intransicCamera: [709.1549,   0.0,    641.4906,
+                    0.0    ,  711.2401, 500.0748,
+                    0.0    ,  0.0,     1.0]
+
+  #distance threshold
+  distanceThreshold: 2.2
+

@@ -1,0 +1,14 @@
+<!--yhs-->
+<launch>
+
+    <node pkg="yhs_can_control" type="yhs_can_control_node" name="yhs_can_control_node" output="screen">
+        <param name="twiststamped_pubtopic_name" value="/current_velocity"/>
+        <param name="twist_subtopic_name" value="cmd_vel"/>
+        <param name="twiststamped_subtopic_name" value="/twist_cmd"/>
+        <param name="vehicle_odom" value="/vehicle/odom"/>
+        <param name="wheel_base" value="0.66"/>
+        <param name="wheel_distance" value="0.606"/>
+    </node>
+
+</launch>
+

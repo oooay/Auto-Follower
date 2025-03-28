@@ -1,0 +1,10 @@
+<!---->
+<launch>
+
+ <node name="scale_up_map" pkg="hybrid_astar" type="scale_up_map" />
+
+ <node name="pub_optimal_goal_new" pkg="hybrid_astar" type="pub_optimal_goal_new" />
+
+ <node name="hybrid_astar" pkg="hybrid_astar" type="hybrid_astar" output="screen" />
+
+</launch>

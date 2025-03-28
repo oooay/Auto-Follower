@@ -1,0 +1,6 @@
+<launch>
+
+    <!-- 启动节点 -->
+    <node name="visual_follow_mapping_node" pkg="visual_follow_mapping" type="visual_follow_mapping_node" output="screen" />
+
+</launch>

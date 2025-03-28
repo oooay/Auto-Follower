@@ -1,0 +1,8 @@
+<!---->
+<launch>
+
+ <node name="fusion_pointclouds" pkg="fusion_pointclouds" type="fusion_pointclouds_node" output="screen" >
+  <remap from="fusion_points" to="velodyne_points" />
+ </node>
+
+</launch>

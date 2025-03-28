@@ -1,0 +1,7 @@
+<launch>
+    <node name="visual_follow_motor" pkg="visual_follow_motor" type="visual_follow_motor" output="screen">
+        <param name="twist_com" value="/dev/ttyUSB0"/>
+        <param name="baudrate" value="115200"/>
+        <param name="target_topic" value="/vision_detector/box_result"/>
+    </node>
+</launch>

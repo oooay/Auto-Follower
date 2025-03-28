@@ -1,0 +1,14 @@
+<launch>
+    <node name="camera_node" pkg="tracker" type="track" >
+        <param name="weight_path" type="string" value="$(find tracker)/weights/fuyunv8n-fp16.engine" />
+        <param name="resetIOU" type="double" value="0.7" />
+        <param name="resetTime" type="int" value="1" />
+        <param name="resetCenter" type="int" value="400" />
+        <param name="FPS" type="int" value="10" /> 
+        <param name="lostTime" type="int" value="100" /> 
+        <param name="track_th" type="double" value="0.1" />
+        <param name="high_th" type="double" value="0.8" />
+        <param name="match_th" type="double" value="0.9" />
+        <param name="y_th" type="double" value="0.8" />  
+    </node> 
+</launch>
