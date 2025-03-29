@@ -34,6 +34,7 @@ public:
 
     std::vector<int> labels;
 
+    
     bool is_original_pc = true;
     if (!gravity_aligned_frame_.empty()) {
       geometry_msgs::TransformStamped tf_stamped;
