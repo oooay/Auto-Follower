@@ -9,9 +9,6 @@
 - [**Related Package**](#related-package)
 
 ## System Overview
-<p align='center'>
-    <img src="./visual_follow_move/config/doc/system_overview.png" alt="drawing" width="800"/>
-</p>
 
 The main contributions of our work can be summarized as follows:  
 •	A novel person-following framework for urban human-robot collaboration, integrating VLST, local mapping, and IRPS-based navigation.   
