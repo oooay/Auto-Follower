@@ -9,8 +9,8 @@
     <img src="./visual_follow_move/config/doc/system_overview.png" alt="drawing" width="800"/>
 </p>
 
-The main contributions of our work can be summarized as follows: 
-•	A novel person-following framework for urban human-robot collaboration, integrating VLST, local mapping, and IRPS-based navigation. 
-•	A VLST module that fuses camera and LiDAR data to achieve 360-degree person identification and localization. 
-•	An IRPS-based navigation method designed to dynamically determine obstacle-free navigation goals, ensuring safe and efficient path planning. 
+The main contributions of our work can be summarized as follows:  
+•	A novel person-following framework for urban human-robot collaboration, integrating VLST, local mapping, and IRPS-based navigation.   
+•	A VLST module that fuses camera and LiDAR data to achieve 360-degree person identification and localization.  
+•	An IRPS-based navigation method designed to dynamically determine obstacle-free navigation goals, ensuring safe and efficient path planning.  
 
