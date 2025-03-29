@@ -6,5 +6,5 @@
 
 ## System Overview
 <p align='center'>
-    <img src="./visual_follow_move/config/doc/system.tif" alt="drawing" width="800"/>
+    <img src="./visual_follow_move/config/doc/system_overview.png" alt="drawing" width="800"/>
 </p>
