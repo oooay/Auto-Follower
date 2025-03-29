@@ -5,3 +5,6 @@
 - [**System Overview**](#system-overview)
 
 ## System Overview
+<p align='center'>
+    <img src="./visual_follow_move/config/doc/system.tif" alt="drawing" width="800"/>
+</p>
