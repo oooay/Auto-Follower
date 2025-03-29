@@ -3,8 +3,10 @@
 
 ## Menu
 - [**System Overview**](#system-overview)
+- [**Package dependency**](#dependency)
 - [**Package install**](#install)
 - [**Run the package**](#run-the-package)
+- [**Related Package**](#related-package)
 
 ## System Overview
 <p align='center'>
@@ -16,6 +18,13 @@ The main contributions of our work can be summarized as follows:
 •	A VLST module that fuses camera and LiDAR data to achieve 360-degree person identification and localization.  
 •	An IRPS-based navigation method designed to dynamically determine obstacle-free navigation goals, ensuring safe and efficient path planning.  
 
+## Dependency
+This is the original ROS1 implementation of Auto-Follower. Auto-Follower has benn tested on ubuntu18.04 with the ROS melodic and ubuntu20.04 with the ROS noetic.  
+```
+sudo apt-get install -y ros-noetic-navigation
+sudo apt-get install -y ros-noetic-robot-localization
+sudo apt-get install -y ros-noetic-robot-state-publisher
+```
 
 ## Install
 Use the following commands to download and compile the package.
@@ -47,3 +56,10 @@ roslaunch visual_follow_mapping visual_follow_mapping.launch
 roslaunch hybrid_astar path_planning.launch  
 rosrun hybrid_astar path_tracking_purepursuit.py  
 ```
+
+## Related packages
+- [linefit_ground_segmentation](https://github.com/lorenwel/linefit_ground_segmentation)
+- [rslidar_sdk](https://github.com/RoboSense-LiDAR/rslidar_sdk)
+- [usb_cam](http://wiki.ros.org/usb_cam)
+- [hybrid-a-star-annotation](https://github.com/teddyluo/hybrid-a-star-annotation)
+- [path_planner](https://github.com/karlkurzer/path_planner)
