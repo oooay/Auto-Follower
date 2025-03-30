@@ -17,7 +17,7 @@ int main( int argc, char** argv )
         loop_rate.sleep();
     }
 
-    system.systemClose(); //结束系统
+    system.systemClose(); //system end
 
     return 0;
 }

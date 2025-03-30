@@ -71,7 +71,7 @@ class TargetLocalization
     ros::Publisher target_motor_position_pub_;
     
     
-    //创建话题订阅对象
+    //Creating a topic subscription object
     image_transport::ImageTransport n;
     image_transport::Publisher points_image_pub_;
 
@@ -79,8 +79,8 @@ class TargetLocalization
 
     double distance_threshold_; // oay default:3.0
 
-    std::thread* nav_goal_thread_; //创建帧线程
-    std::mutex m; //实例化m对象，线程互斥量
+    std::thread* nav_goal_thread_; //Creating a frame thread
+    std::mutex m; //Instantiate m objects, thread mutexes
 
     int num_ = 1;
     std::deque<Eigen::Vector3d> resultBuf_; 

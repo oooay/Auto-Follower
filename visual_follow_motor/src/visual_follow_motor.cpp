@@ -20,7 +20,7 @@ MotorSerial::~MotorSerial()
     motorSerial_.close();
 }
 
-//当前帧点云的接收事件函数
+//Receive event function for the current frame of the point cloud
 void MotorSerial::currCloudHandler( const sensor_msgs::PointCloud2ConstPtr& msg  )
 {
     pcl::PointCloud<pcl::PointXYZI>::Ptr motor_free_pointcloud( new pcl::PointCloud<pcl::PointXYZI>() );
@@ -37,7 +37,7 @@ void MotorSerial::currCloudHandler( const sensor_msgs::PointCloud2ConstPtr& msg 
 
 void MotorSerial::detectResultCallback( const geometry_msgs::PoseStampedConstPtr& detect_result_msg )
 {
-    time_num_ = 0; //计数器清零
+    time_num_ = 0; //Counter Zero
     search_status_ = false;
 
     int16_t x_min = std::max(0, static_cast<int>(detect_result_msg->pose.orientation.x));
@@ -52,10 +52,10 @@ void MotorSerial::detectResultCallback( const geometry_msgs::PoseStampedConstPtr
     //angle control model
     angleControlModel();
 
-    //速度控制模式
+    //Speed control mode
     // speedControlModel( pixel_bias );
 
-    //位置控制模式
+    //Position Control Mode
     // positionControlModel( pixel_bias );
 }
 
@@ -110,11 +110,11 @@ void MotorSerial::angleControlModel()
     {
         if( d_angle > 0 )
         {
-            motorPositionControlCmd( input_angular, 0x01, speed ); //逆时针旋转
+            motorPositionControlCmd( input_angular, 0x01, speed ); //turn counterclockwise
         }
         else if( d_angle < 0 )
         {
-            motorPositionControlCmd( input_angular, 0x00, speed ); //顺时针旋转
+            motorPositionControlCmd( input_angular, 0x00, speed ); //turn clockwise
         }
     }
     else
@@ -133,17 +133,17 @@ void MotorSerial::speedControlModel()
 
     if( pixel_bias < -100 )
     {
-        motorSpeedControlCmd( -speed ); //逆时针旋转
+        motorSpeedControlCmd( -speed ); //turn counterclockwise
     }
     else if( pixel_bias > 100 )
     {
-        motorSpeedControlCmd( speed ); //顺时针旋转
+        motorSpeedControlCmd( speed ); //turn clockwise
     }
     else
         motorSpeedControlCmd( 0 );
 }
 
- //位置模式控制
+ //Position Mode Control
 void MotorSerial::positionControlModel()
 {
     int16_t pixel_bias = center_x_ - CENTER_X;
@@ -162,9 +162,9 @@ void MotorSerial::positionControlModel()
             target_angular = -ANGULAR_THNRESHOLD;
 
         if( target_angular < 0 )
-            motorPositionControlCmd( -target_angular, 0x01, speed ); //逆时针旋转
+            motorPositionControlCmd( -target_angular, 0x01, speed ); //turn counterclockwise
         else
-            motorPositionControlCmd( 360 - target_angular, 0x01, speed ); //逆时针旋转
+            motorPositionControlCmd( 360 - target_angular, 0x01, speed ); //turn counterclockwise
     }
     else if( pixel_bias > 100 )
     {
@@ -175,16 +175,10 @@ void MotorSerial::positionControlModel()
             target_angular = -ANGULAR_THNRESHOLD;
 
         if( target_angular < 0 )
-            motorPositionControlCmd( -target_angular, 0x00, speed ); //顺时针旋转
+            motorPositionControlCmd( -target_angular, 0x00, speed ); //turn clockwise
         else
-            motorPositionControlCmd( 360 - target_angular, 0x00, speed ); //顺时针旋转
-    // else
-    // {
-    //     target_angular = current_angular_;
-    // }
+            motorPositionControlCmd( 360 - target_angular, 0x00, speed ); //turn clockwise
     }
-    // std::cout << "center_x - 960: " << center_x - CENTER_X << std::endl;
-    // std::cout << "target_angular: " << target_angular << std::endl;
 }
 
 void MotorSerial::statusCheck()
@@ -192,31 +186,27 @@ void MotorSerial::statusCheck()
     time_num_++;
     if( time_num_ > 300 )
         time_num_ = 300;
-
-    // std::cout << "Time num:  " << time_num_ << "  Search status:  " << search_status_ << std::endl;
     
-    //长时间接收不到识别框就循环扫描
+    //Cyclic scanning if the recognition frame is not received for a long time
     if( time_num_ > 50 )
     {
         if( !search_status_ )
         {
-            motorPositionControlCmd( 90, 0x00, 100 ); //顺时针巡航
+            motorPositionControlCmd( 90, 0x00, 100 ); //clockwise cruise
         }
         search_status_ = true;
         if( current_angular_ < - 87 )
         {
-            motorPositionControlCmd( 270, 0x01, 100 ); //逆时针巡航
-            //motorSpeedControlCmd( -100 ); //逆时针旋转
+            motorPositionControlCmd( 270, 0x01, 100 ); //counterclockwise cruise
         }
         if( current_angular_ > 87 )
         {
-            motorPositionControlCmd( 90, 0x00, 100 ); //顺时针巡航
-            //motorSpeedControlCmd( 100 ); //逆时针旋转
+            motorPositionControlCmd( 90, 0x00, 100 ); //clockwise cruise
         }
         return;
     }
 
-    //短时间内接收不到识别框就停止运动
+    //Stops movement if it does not receive the recognition frame for a short period of time
     if( time_num_ > 20 )
     {
         motorSpeedControlCmd( 0 );
@@ -224,7 +214,7 @@ void MotorSerial::statusCheck()
     }
 }
 
-//串口开启
+//Serial port on
 uint8_t MotorSerial::motorSerialStart()
 {
     motorSerial_.setPort( serialPortNum_ );
@@ -258,42 +248,34 @@ void MotorSerial::getMotorRotation()
     rotation_cmd[3] = 0x00;
     rotation_cmd[4] = rotation_cmd[0] + rotation_cmd[1] + rotation_cmd[2] + rotation_cmd[3];
 
-    // std::cout << std::hex << (int)rotation_cmd[0] << "  " << std::hex << (int)rotation_cmd[1] << "  "
-    //           << std::hex << (int)rotation_cmd[2] << "  " << std::hex << (int)rotation_cmd[3] << "  "
-    //           << std::hex << (int)rotation_cmd[4] << "  " << std::endl;
-
-    //写入数据到串口
+    //Write data to serial port
     if( motorSerial_.isOpen() )
     {
         motorSerial_.write( rotation_cmd, 5 );
         usleep( 50000 );
         serialDataReading();
-        // ROS_INFO_STREAM( "Serial Port is OK, getting rotation......" );
-
     }
     else
-        motorSerialStart(); //重启串口
+        motorSerialStart(); //Reboot the serial port
     
 }
 
-//位置控制
+//position control
 void MotorSerial::motorPositionControlCmd( uint32_t angle, uint8_t spin_direction, uint32_t speed )
 {
     std::cout << "motor position control, angle value: " << (int)angle << std::endl;
-    // if( angle < -ANGULAR_THNRESHOLD || angle > ANGULAR_THNRESHOLD )
-    //     return;
 
     uint32_t angle_control = angle * 9 * 100;
 
-    uint32_t max_speed = speed * 100; //电机转速
+    uint32_t max_speed = speed * 100; //Motor speed
     uint8_t motor_cmd[14];
-    motor_cmd[0] = 0x3E; //帧头
-    motor_cmd[1] = 0xA6; //命令
+    motor_cmd[0] = 0x3E; //header
+    motor_cmd[1] = 0xA6; //command
     motor_cmd[2] = 0x01; //ID
-    motor_cmd[3] = 0x08; //数据长度
-    motor_cmd[4] = motor_cmd[0] + motor_cmd[1] + motor_cmd[2] + motor_cmd[3]; //帧命令校验和字节
+    motor_cmd[3] = 0x08; //data length
+    motor_cmd[4] = motor_cmd[0] + motor_cmd[1] + motor_cmd[2] + motor_cmd[3]; //Frame Command Checksum Byte
 
-    motor_cmd[5] = spin_direction; //转动方向字节，0x00顺时针， 0x01逆时针
+    motor_cmd[5] = spin_direction; //Direction of rotation byte, 0x00 clockwise, 0x01 counterclockwise
     motor_cmd[6] = *( uint8_t* )( &angle_control ); 
     motor_cmd[7] = *( ( uint8_t* )( &angle_control ) + 1 ); 
     motor_cmd[8] = *( ( uint8_t* )( &angle_control ) + 2 ); 
@@ -303,16 +285,8 @@ void MotorSerial::motorPositionControlCmd( uint32_t angle, uint8_t spin_directio
     motor_cmd[12] = *( ( uint8_t* )( &max_speed ) + 3 );
     motor_cmd[13] = motor_cmd[5] + motor_cmd[6] + motor_cmd[7] + motor_cmd[8]
                   + motor_cmd[9] + motor_cmd[10] + motor_cmd[11] + motor_cmd[12];
-    // std::cout << std::hex << (int)motor_cmd[0] << "  " << std::hex << (int)motor_cmd[1] << "  "
-    //           << std::hex << (int)motor_cmd[2] << "  " << std::hex << (int)motor_cmd[3] << "  "
-    //           << std::hex << (int)motor_cmd[4] << "  " << std::hex << (int)motor_cmd[5] << "  "
-    //           << std::hex << (int)motor_cmd[6] << "  " << std::hex << (int)motor_cmd[7] << "  "
-    //           << std::hex << (int)motor_cmd[8] << "  " << std::hex << (int)motor_cmd[9] << "  "
-    //           << std::hex << (int)motor_cmd[10] << "  " << std::hex << (int)motor_cmd[11] << "  "
-    //           << std::hex << (int)motor_cmd[12] << "  " << std::hex << (int)motor_cmd[13] << "  "
-    //           << std::endl;
 
-    //写入数据到串口
+    //Write data to serial port
     if( motorSerial_.isOpen() )
     {
         motorSerial_.write( motor_cmd, 14 );
@@ -321,21 +295,19 @@ void MotorSerial::motorPositionControlCmd( uint32_t angle, uint8_t spin_directio
         // ROS_INFO_STREAM( "Serial Port is OK, sending motor position control command......" );
     }
     else
-        motorSerialStart(); //重启串口
+        motorSerialStart(); //Reboot the serial port
     
 }
 
 void MotorSerial::motorSpeedControlCmd( int32_t speed )
 {
-    // std::cout << "motor speed control, speed value: " << speed << std::endl;
-
     int32_t speed_control = speed * 100;
     uint8_t speed_cmd[10];
-    speed_cmd[0] = 0x3E; //帧
-    speed_cmd[1] = 0xA2; //命令
+    speed_cmd[0] = 0x3E; //header
+    speed_cmd[1] = 0xA2; //command
     speed_cmd[2] = 0x01; //ID
-    speed_cmd[3] = 0x04; //数据长度
-    speed_cmd[4] = speed_cmd[0] + speed_cmd[1] + speed_cmd[2] + speed_cmd[3]; //帧命令校验和字节
+    speed_cmd[3] = 0x04; //data length
+    speed_cmd[4] = speed_cmd[0] + speed_cmd[1] + speed_cmd[2] + speed_cmd[3]; //Frame Command Checksum Byte
 
     speed_cmd[5] = *( uint8_t* )( &speed_control ); 
     speed_cmd[6] = *( ( uint8_t* )( &speed_control ) + 1 ); 
@@ -343,7 +315,7 @@ void MotorSerial::motorSpeedControlCmd( int32_t speed )
     speed_cmd[8] = *( ( uint8_t* )( &speed_control ) + 3 );
     speed_cmd[9] = speed_cmd[5] + speed_cmd[6] + speed_cmd[7] + speed_cmd[8];
 
-    //写入数据到串口
+    //Write data to serial port
     if( motorSerial_.isOpen() )
     {
         motorSerial_.write( speed_cmd, 10 );
@@ -352,52 +324,33 @@ void MotorSerial::motorSpeedControlCmd( int32_t speed )
         // ROS_INFO_STREAM( "Serial Port is OK, sending control command......" );
     }
     else
-        motorSerialStart(); //重启串口
+        motorSerialStart(); //Reboot the serial port
 }
 
-//串口数据读取
+//Serial data reading
 void MotorSerial::serialDataReading()
 {
-    //std::lock_guard<std::mutex> guard( serial_mutex ); //保护串口对象
-    //serial_mutex.lock();
-
-    size_t data_size = motorSerial_.available(); //serialport.available()当串口没有缓存的时候，这个函数会一直等到有缓存才返回字符数
-    // std::cout << "data_size: " << (int)data_size << std::endl;
-    // if( data_size < 30 )
-    //     return;
+    //serialport.available()When the serial port is not cached, this function will wait until it is cached before returning the number of characters
+    size_t data_size = motorSerial_.available(); 
 
     uint8_t buf[data_size];
     motorSerial_.read( buf, data_size );
 
-    // serial_mutex.unlock();
-    // for( size_t i = 0; i < data_size; i++ )
-    // {
-    //     std::cout << std::hex << (int)buf[i] << " ";
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << std::hex << (int)buf[0] << "  " << std::hex << (int)buf[1] << "  "
-    //           << std::hex << (int)buf[2] << "  " << std::hex << (int)buf[3] << "  "
-    //           << std::hex << (int)buf[4] << "  " << std::hex << (int)buf[5] << "  "
-    //           << std::hex << (int)buf[6] << "  " << std::hex << (int)buf[7] << "  "
-    //           << std::hex << (int)buf[8] << "  " << std::hex << (int)buf[9] << "  "
-    //           << std::endl;
-
     serialDataProcessing( buf, data_size );
 }
 
-//串口数据处理
+//Serial Data Processing
 inline void MotorSerial::serialDataProcessing( uint8_t *buf, size_t data_size )
 {
     for( size_t i = 0; i < data_size; i++ )
     {
-        // 1、寻找电机角度有效帧
+        // 1、Finding motor angle valid frames
         if( static_cast<uint8_t>( buf[i] ) == 0X3E && static_cast<uint8_t>( buf[i + 1] ) == 0X94 && data_size - i >= 10 )
         {
-            //求数据帧的和，做和校验
+            //Sum the data frames and do the checksum.
             uint8_t sum = static_cast<uint8_t>(buf[i]) + static_cast<uint8_t>(buf[i+1]) 
                         + static_cast<uint8_t>(buf[i+2]) + static_cast<uint8_t>(buf[i+3]);
-            //数据位和校验
+            //Data Bits and Checksums
             if( sum == static_cast<uint8_t>(buf[i+4]) )
             {
                 angleCompute( buf, i );
@@ -407,7 +360,7 @@ inline void MotorSerial::serialDataProcessing( uint8_t *buf, size_t data_size )
     }
 }
 
-//电机角度计算
+//Motor angle calculation
 inline void MotorSerial::angleCompute( const uint8_t *buf, int32_t i )
 {
     uint8_t sum = static_cast<uint8_t>( buf[i + 5] ) + static_cast<uint8_t>( buf[i + 6] )
@@ -432,13 +385,13 @@ inline void MotorSerial::angleCompute( const uint8_t *buf, int32_t i )
 
         double current_angular_radian = current_angular_ * M_PI / 180.0;
 
-        //更新变换矩阵
+        //Updating the transformation matrix
         fixed_free_trans_(0,0) = cos( current_angular_radian );
         fixed_free_trans_(0,1) = -sin( current_angular_radian );
         fixed_free_trans_(1,0) = sin( current_angular_radian );
         fixed_free_trans_(1,1) = cos( current_angular_radian );
 
-        //更新角度值并发布tf
+        //Update angle values and post tf
         tf::Transform transform;
         tf::Quaternion q1;
 
@@ -469,9 +422,7 @@ int main( int argc, char** argv )
 
     while( ros::ok() )
     {
-        // motorSerial->angleControlModel();
         motorSerial->getMotorRotation();
-        // motorSerial->serialDataReading();
         motorSerial->statusCheck();
         ros::spinOnce();
         loop_rate.sleep();

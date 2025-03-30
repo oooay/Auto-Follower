@@ -34,7 +34,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf2_ros
   tf2_eigen
-  # 其他依赖...
 )
 
 find_package(Eigen3 REQUIRED)

@@ -21,9 +21,8 @@ class System
     private:
     ros::NodeHandle nh_, private_nh_;
     ServerTCP *server;
-    std::thread *serverThread; //服务器线程
-    FutureSerial *futureSerial; //串口对象
-    //std::thread *serverThread_2_; //数字孪生端服务器线程
+    std::thread *serverThread; //server thread
+    FutureSerial *futureSerial; //serial port object (computing)
 };
 
 #endif

@@ -2,16 +2,14 @@
 
 namespace gmapping 
 {
-    // 构造函数
+
 GMapping::GMapping() : privatNode("~")
 {
     subRegisterCloud = nodeHandle.subscribe("/ground_segmentation/obstacle_cloud", 1, &GMapping::currCloudHandler, this);  //   /cost_PointCloud  
-    // map_publisher = privatNode.advertise<nav_msgs::OccupancyGrid>("/occupy_map", 1, true);
-    // map_publisher2 = privatNode.advertise<nav_msgs::OccupancyGrid>("/map2", 1, true);
     map_publisher3 = privatNode.advertise<nav_msgs::OccupancyGrid>("/occupy_map", 1, true);
     laserCloudCurr.reset(new pcl::PointCloud<PointType>());
 
-    // 参数初始化
+    // Parameter initialization
     InitParams();
 }
 
@@ -20,7 +18,7 @@ GMapping::~GMapping()
     delete gmapping_map;
 }
 
-// ros的参数初始化
+// Initialization of parameters for ros
 void GMapping::InitParams()
 {
     if (!privatNode.getParam("maxRange", max_range))
@@ -43,51 +41,51 @@ void GMapping::InitParams()
         occ_thresh = 0.7;
 
     /********************************************/
-    // 对map_进行初始化
-    // 地图的分辨率为0.05m,代表一个格子的距离是0.05m
+    // Initialize map_
+    // The resolution of the map is 0.05m, which means that the distance of a grid is 0.05m.
     map.info.resolution = resolution;
 
-    // 地图图片像素的大小, width为地图的宽度是多少个像素
+    // Map image size in pixels, width is how many pixels the width of the map is
     map.info.width = (xmax - xmin) / map.info.resolution;
     map.info.height = (ymax - ymin) / map.info.resolution;
 
-    // 地图左下角的点对应的物理坐标
+    // Physical coordinates corresponding to the points in the lower left corner of the map
     map.info.origin.position.x = xmin;
     map.info.origin.position.y = ymin;
 
-    // 对数组进行初始化, 数组的大小为实际像素的个数
+    // Initialize the array with the actual number of pixels.
     map.data.resize(map.info.width * map.info.height);
 
     /********************************************/
 
     /********************************************/
-    // 对map2_进行初始化
-    // 地图的分辨率为0.05m,代表一个格子的距离是0.05m
+    // Initialize map2_
+    // The resolution of the map is 0.05m, which means that the distance of a grid is 0.05m.
     map2.info.resolution = resolution;
 
-    // 地图图片像素的大小, width为地图的宽度是多少个像素
+    // Map image size in pixels, width is how many pixels the width of the map is
     map2.info.width = 20 / map2.info.resolution;
     map2.info.height = 10 / map2.info.resolution;
 
-    // 地图左下角的点对应的物理坐标
+    // Physical coordinates corresponding to the points in the lower left corner of the map
     map2.info.origin.position.x = -5;
     map2.info.origin.position.y = -5;
 
-    // 对数组进行初始化, 数组的大小为实际像素的个数
+    // Initialize the array with the actual number of pixels.
     map2.data.resize(map2.info.width * map2.info.height);
     /********************************************/
 
 
         /********************************************/
-    // 对map3_进行初始化
-    // 地图的分辨率为0.05m,代表一个格子的距离是0.05m
+    // Initialize map3_
+    // The resolution of the map is 0.05m, which means that the distance of a grid is 0.05m.
     map3.info.resolution = resolution;
 
-    // 地图图片像素的大小, width为地图的宽度是多少个像素
+    // Map image size in pixels, width is how many pixels the width of the map is
     map3.info.width = 10 / map3.info.resolution;
     map3.info.height = 20 / map3.info.resolution;
 
-    // 地图左下角的点对应的物理坐标
+    // Physical coordinates corresponding to the points in the lower left corner of the map
     map3.info.origin.position.x = -5;
     map3.info.origin.position.y = -5;
     map3.info.origin.orientation.x = 0.70711;
@@ -95,25 +93,25 @@ void GMapping::InitParams()
     map3.info.origin.orientation.z = 0;
     map3.info.origin.orientation.w = 0;
 
-    // 对数组进行初始化, 数组的大小为实际像素的个数
+    // Initialize the array with the actual number of pixels.
     map3.data.resize(map3.info.width * map3.info.height);
     /********************************************/
 
-    // 地图的中点
+    // Midpoint of the map
     Point center;
     center.x = (xmin + xmax) / 2.0;
     center.y = (ymin + ymax) / 2.0;
-    // ScanMatcherMap为GMapping中存储地图的数据类型
+    // ScanMatcherMap is the data type for storing maps in GMapping
     /*****************************************************
-    这里的ScanMatcherMap为GMapping中存储地图的数据类型，
-    先声明了一个ScanMatcherMap的对象gmapping_map_，
-    然后通过ComputeMap()为gmapping_map_赋值，
-    然后再将gmapping_map_中存储的值赋值到ros的栅格地图的数据类型中．
+    Here ScanMatcherMap is the data type of the map stored in GMapping.
+    First declare a ScanMatcherMap object gmapping_map_，
+    Then assign a value to gmapping_map_ via ComputeMap()，
+    The value stored in gmapping_map_ is then assigned to the data type of ros's raster map．
     *****************************************************/
     gmapping_map = new ScanMatcherMap( center, xmin, ymin, xmax, ymax, resolution  );
 }
 
-//当前帧点云的接收事件函数
+//Receive event function for the current frame of the point cloud
 void GMapping::currCloudHandler( const sensor_msgs::PointCloud2ConstPtr& msg  )
 {
     timeLaserCloudCurr = msg->header.stamp.toSec();
@@ -128,7 +126,7 @@ void GMapping::run()
         map.header.frame_id = "motor_fixed";
         map3.header.frame_id = "motor_fixed";
 
-        // 使用当前雷达数据更新GMapping地图中栅格的值
+        // Updating raster values in GMapping maps with current radar data
         ComputeMap( gmapping_map, laserCloudCurr );
     }
 }
@@ -143,29 +141,19 @@ void GMapping::ComputeMap( ScanMatcherMap* gmap, const pcl::PointCloud<PointType
         }
     }
 
-    // 通过激光雷达的数据，找出地图的有效区域
+    // Find out the effective area of the map by using the data from the LiDAR
     for( size_t i = 0; i < currPointCloud->points.size(); i++ ) 
     {
-        //过滤掉空点
-        //if( currPointCloud->points[i].intensity <= 0 )
-        //    continue;
         float x1 = currPointCloud->points[i].x;
         float y1 = currPointCloud->points[i].y;
         float z1 = currPointCloud->points[i].z;
 
-        // 排除错误的激光点
-        //double d = sqrt( x1 * x1 + y1 * y1 +z1 * z1 );
+        // Troubleshooting erroneous laser points
         double d = sqrt( x1 * x1 + y1 * y1 );
         if (d > max_range || d == 0.0 || !std::isfinite(d))
             continue;
         if (z1 > 0.2 || z1 < -1)
             continue;
-        //if( z1 > 1.5 || z1 < -0.5 )
-        //    continue;
-        // if( x1 > 3 && z1 < -0.35 )
-        //     continue;
-        // if( x1 > 5 && z1 < -0.28 )
-        //     continue;
         
         if( x1 > -1.5 && x1 < 0.1 && abs( y1 ) < 0.36 )
             continue;
@@ -173,7 +161,7 @@ void GMapping::ComputeMap( ScanMatcherMap* gmap, const pcl::PointCloud<PointType
         if (d > max_use_range)
             d = max_use_range;
 
-        //点云中的点在世界坐标系下的坐标
+        //Coordinates of the points in the point cloud in the world coordinate system
         Point phit;
         phit.x = x1;
         phit.y = y1;
@@ -203,17 +191,11 @@ void GMapping::ComputeMap( ScanMatcherMap* gmap, const pcl::PointCloud<PointType
         }
     }
 
-
-    // map.header.stamp = ros::Time().fromSec( timeLaserCloudCurr );
-    // map_publisher.publish( map );
-    // map2.header.stamp = ros::Time().fromSec( timeLaserOdometry );
-    // map_publisher2.publish( map2 );
-
     map3.header.stamp = ros::Time::now();
     map_publisher3.publish( map3 );
 }
 
-} // end namespace
+}
 
 int main(int argc, char **argv)
 {

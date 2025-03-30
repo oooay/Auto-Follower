@@ -40,7 +40,7 @@ class MotorSerial
     public:
     MotorSerial( ros::NodeHandle &nh, ros::NodeHandle &private_nh );
     ~MotorSerial();
-    uint8_t motorSerialStart(); //启动串口
+    uint8_t motorSerialStart(); //start the serial port (computing)
     void serialDataReading();
     inline void serialDataProcessing( uint8_t *buf, size_t data_size );
     void getMotorRotation();
@@ -53,18 +53,18 @@ class MotorSerial
 
     void detectResultCallback( const geometry_msgs::PoseStampedConstPtr& detect_result_msg );
     inline void angleCompute( const uint8_t *buf, int32_t i );
-    void statusCheck(); //系统状态监测
+    void statusCheck(); //System status monitoring
 
     private:
     ros::NodeHandle nh_, private_nh_;
     ros::Subscriber detect_result_sub_;
-    ros::Subscriber sub_pointcloud_; // 声明一个Subscriber,接收当前帧点云话题
-    ros::Publisher fixed_points_pub_; //电机固定端点云发布
+    ros::Subscriber sub_pointcloud_; // Declare a Subscriber to receive the current frame of the point cloud topic.
+    ros::Publisher fixed_points_pub_; //Motor Fixed End Point Cloud Release
     ros::Publisher motor_angle_pub_;
 
     serial::Serial motorSerial_;
-    std::string serialPortNum_; //串口号
-    int32_t serialBaudrate_; //波特率
+    std::string serialPortNum_; //serial number
+    int32_t serialBaudrate_; //baudrate
     std::string detect_box_topic_;
     int32_t current_angular_; //-90 - 90
 
@@ -74,7 +74,7 @@ class MotorSerial
 
     uint16_t time_num_;
 
-    bool search_status_; //搜寻模式开关
+    bool search_status_; //Search Mode Switch
 
     double fx_, cx_;
 

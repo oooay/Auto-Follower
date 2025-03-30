@@ -4,17 +4,10 @@
     <rosparam file="$(find visual_follow_move)/config/params.yaml" command="load" />
 
     <node name="visual_follow_move" pkg="visual_follow_move" type="visual_follow_move" output="screen" />
-    <!--node pkg="tf" type="static_transform_publisher" name="base_link_to_camera_link" args="1.8 0.06 0.75 0 0 0 /base_link /camera_link 50"/-->
-    <!-- fuyun car -->
-    <!--node pkg="tf" type="static_transform_publisher" name="base_link_to_camera" args="1.57 0.06 0.75 -0.1 0 0 /base_link /camera 50"/--> 
-    <!-- jihua car -->
     <node pkg="tf" type="static_transform_publisher" name="map_to_vehicle_odom" args="0 0 0 0 0 0 /map /vehicle_odom 50"/>
     <node pkg="tf" type="static_transform_publisher" name="vehicle_link_to_base_link" args="0 0 0 0 0 0 /vehicle_link /base_link 50"/>
     <node pkg="tf" type="static_transform_publisher" name="base_link_to_motor_fixed" args="0.84 0 0.42 0 0 0 /base_link /motor_fixed 50"/>
     <node pkg="tf" type="static_transform_publisher" name="motor_free_to_velodyne" args="0.0 0.0 0.0 -0.08 0 0 /motor_free /velodyne 50"/>
     <node pkg="tf" type="static_transform_publisher" name="velodyne_to_camera_link" args="0.055 0.0 0.1835 0 0 0 /velodyne /camera_link 50"/>
     <node pkg="tf" type="static_transform_publisher" name="base_link_to_local_map" args="-4.5 -5.0 -0.42 1.5708 0 3.14159 /base_link /local_map 50"/>
-    <!-- fuyun car -->
-    <!--node pkg="tf" type="static_transform_publisher" name="map_to_origin_link" args="0 0 0 0 0 0 /map /origin_link 50"/-->
-    <!--node pkg="tf" type="static_transform_publisher" name="vehicle_link_to_base_link" args="0 0 0 0 0 0 /vehicle_link /base_link 50"/-->
 </launch>
