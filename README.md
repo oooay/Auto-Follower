@@ -40,13 +40,13 @@ roslaunch visual_follow_motor visual_follow_motor.launch
 **2. Person Identification and Localization**  
 ```
 roslaunch tracker track_main.launch  
-roslaunch hybrid_astar path_planning_new.launch  
+roslaunch visual_follow_move visual_follow_move.launch  
 ```
 **3. Local mapping and IRPS-based path navigation** 
 ```
 roslaunch linefit_ground_segmentation_ros segmentation.launch  
 roslaunch visual_follow_mapping visual_follow_mapping.launch  
-roslaunch hybrid_astar path_planning.launch  
+roslaunch hybrid_astar path_planning_new.launch  
 rosrun hybrid_astar path_tracking_purepursuit.py  
 ```
 
