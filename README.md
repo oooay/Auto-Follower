@@ -12,7 +12,7 @@
 "TODU" 
 
 ## Dependency
-This is the original ROS1 implementation of Auto-Follower. Auto-Follower has benn tested on ubuntu18.04 with the ROS melodic and ubuntu20.04 with the ROS noetic.  
+This is the original ROS1 implementation of Auto-Follower. Auto-Follower has been tested on ubuntu18.04 with the ROS melodic and ubuntu20.04 with the ROS noetic.  
 ```
 sudo apt-get install -y ros-noetic-navigation
 sudo apt-get install -y ros-noetic-robot-localization
